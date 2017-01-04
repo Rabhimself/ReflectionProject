@@ -25,45 +25,27 @@ public class ConsoleRunner {
 
 		bigAMap = ja.getBigAfferentMap();
 		bigEMap = ja.getBigEfferentMap();
-		// System.out.println(bigAMap);
-		// System.out.println(bigEMap);
-
-		// System.out.println("///////////////////////////AFFERENT");
-		// Iterator it = bigAMap.entrySet().iterator();
-		// while (it.hasNext()) {
-		// Map.Entry <String, Set<Class>> pair = (Map.Entry)it.next();
-		// int ca = pair.getValue().size();
-		// Set<Class> asdf = bigEMap.get(pair.getKey());
-		// int ce;
-		// if(asdf != null)
-		// ce = asdf.size();
-		// else
-		// ce = 0;
-		//
-		// System.out.println(ce +" "+ca);
-		// it.remove();
-		// }
 
 		Iterator it = bigEMap.entrySet().iterator();
 		while (it.hasNext()) {
 			Map.Entry<String, Set<Class>> pair = (Map.Entry) it.next();
-			double ca = pair.getValue().size();
+			double ce = pair.getValue().size();
 			Set<Class> asdf = bigAMap.get(pair.getKey());
-			double ce;
+			double ca;
 			if (asdf != null)
-				ce = asdf.size();
+				ca = asdf.size();
 			else
-				ce = 0;
-
-			if(ce+ca != 0){
+				ca = 0;
+			System.out.println("CLASS "+pair.getKey());
+			System.out.println("     "+ce +"/" +ca + " + " + ce);
+			if (ce + ca != 0) {
 				
-			
-			System.out.println(ce/(ca+ce));
-
-			System.out.println("////////////////");
+				System.out.println("     Stability = " + (ce / (ca + ce)));
+				
 			}
-			else			
-				System.out.println("shhhiiiiitttt");
+			else
+				System.out.println("     Stability = " + 0);
+				
 			it.remove();
 		}
 	}

@@ -69,7 +69,7 @@ public class AppWindow {
 					JarAnalyzer ja = new JarAnalyzer();
 					
 					ja.analyzeJar(ju.unpack(), ju.getLoader());
-					table = StabilityArrayBuilder.init(ja.getBigAfferentMap(), ja.getBigEfferentMap());
+					table = StabilityArrayBuilder.init(ja.getBigEfferentMap(), ja.getBigAfferentMap());
 				} catch (MalformedURLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

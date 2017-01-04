@@ -37,8 +37,6 @@ public class JarAnalyzer {
 				if (!name.contains("$"))
 					name.substring(0, name.length() - ".class".length());
 
-				
-
 				try {
 					Class cls = Class.forName(name, true, loader);
 					ca.buildCouplings(cls);

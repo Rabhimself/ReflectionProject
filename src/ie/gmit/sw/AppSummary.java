@@ -36,10 +36,10 @@ public class AppSummary extends JDialog{
 	private void createTable(String [][] arr){
 		tm = new TypeSummaryTableModel(arr);
 		table = new JTable(tm);
-		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 		table.setSelectionBackground(Color.YELLOW);
 
-		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		
 		TableColumn column = null;
 		for (int i = 0; i < table.getColumnCount(); i++){

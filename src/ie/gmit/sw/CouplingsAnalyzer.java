@@ -36,51 +36,53 @@ public class CouplingsAnalyzer {
 
 		Constructor[] cons = null;
 		try {
-			cons = cls.getConstructors();
-			Field[] fields = cls.getFields(); // Get the fields
-			// attributes
-			Method[] methods = cls.getMethods(); // Get the set of
-			// methods
-			Map<String, Class[]> paramsMap = new HashMap<String, Class[]>();
+
 
 			Set<Class> effDependencies = new HashSet<Class>();
 			bigEfferentMap.put(clsName, effDependencies);
+			
+			///////////Fields////////////////
+			Field[] fields = cls.getDeclaredFields();
+			Class[] variableTypes = new Class[fields.length];
+			for (int i = 0; i < fields.length; i++) {
+				 variableTypes[i] = fields[i].getType();
+			}
+			doParamsLoop(variableTypes, clsName, cls);
+			
+			////////////////////////////////
+			
 			/////////// Get all dependencies from constructors//////////
+			cons = cls.getConstructors();
 			for (int i = 0; i < cons.length; i++) {
 				Class[] params = cons[i].getParameterTypes(); // Get the
-				// parameters
-				// System.out.println("Constructors:" +cons[i]);
 				doParamsLoop(params, clsName, cls);
-
 			}
 			/////////////////////////////////////////////////////////
 
 			////////////// Get all dependencies from methods//////////////
+			Method[] methods = cls.getMethods(); // Get the set of
 			for (int i = 0; i < methods.length; i++) {
-				Class c = methods[i].getReturnType(); // Get a method
-				// return
-				// type
 				Class[] params = methods[i].getParameterTypes(); // Get
-				// method
-				// parameters
-
 				doParamsLoop(params, clsName, cls);
-				
-				Class f = methods[i].getReturnType();
-				effDependencies.add(f);
-				if (!bigAfferentMap.containsKey(f.getName())) {
-					// create the set of afferent dependencies for the
-					// parameter
-					Set<Class> affDependencies = new HashSet<Class>();
-					affDependencies.add(cls);
-					// add it and the big map of afferent dependencies
-					bigAfferentMap.put(f.getName(), affDependencies);
-				} else {
-					// get the set of afferent dependencies for the
-					// parameter and add the current class to it
-					bigAfferentMap.get(f.getName()).add(cls);
+
+				Class c = methods[i].getReturnType();
+				String n = c.getName();
+				if ((n.contains(".") && !n.startsWith("java."))) {
+					effDependencies.add(c);
+					if (!bigAfferentMap.containsKey(c.getName())) {
+						// create the set of afferent dependencies for the
+						// parameter
+						Set<Class> affDependencies = new HashSet<Class>();
+						affDependencies.add(cls);
+						// add it and the big map of afferent dependencies
+						bigAfferentMap.put(c.getName(), affDependencies);
+					} else {
+						// get the set of afferent dependencies for the
+						// parameter and add the current class to it
+						bigAfferentMap.get(c.getName()).add(cls);
+					}
 				}
-			}			
+			}
 		} catch (NoClassDefFoundError e) {
 			// These are thrown when trying to load some classes that arent
 			// necessarily needed by the library, but can be used
@@ -100,12 +102,13 @@ public class CouplingsAnalyzer {
 			if (indx != -1) {
 				n = n.substring(0, indx);
 			}
-
 			// ignore any primitives and base java classes
-			if (n.contains(".") && !n.startsWith("java.") && !n.contains("$")) {
+			if (n.contains(".") && !n.startsWith("java.")) {
+//				System.out.println(n);
 				// add the efferent dependency (param[j]) to the set
 				// since this class is dependent on it
 				bigEfferentMap.get(className).add(params[j]);
+//				System.out.println(className + " dependent on " + params[j]);
 				if (!bigAfferentMap.containsKey(params[j].getName())) {
 					// create the set of afferent dependencies for the
 					// parameter
@@ -113,10 +116,12 @@ public class CouplingsAnalyzer {
 					affDependencies.add(cls);
 					// add it and the big map of afferent dependencies
 					bigAfferentMap.put(params[j].getName(), affDependencies);
+//					System.out.println(params[j].getName() + " dependent on " + className);
 				} else {
 					// get the set of afferent dependencies for the
 					// parameter and add the current class to it
 					bigAfferentMap.get(params[j].getName()).add(cls);
+//					System.out.println(params[j].getName() + " dependent on " + className);
 				}
 				// System.out.println(cls.getName() +" is dependent on "
 				// +params[j].getName());
