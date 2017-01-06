@@ -1,42 +1,42 @@
 package ie.gmit.sw;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.util.Iterator;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.Map;
 import java.util.Set;
+import java.util.jar.JarInputStream;
 
 public class ConsoleRunner {
-	public static void main(String[] args) throws MalformedURLException {
-		Map<String, Set<Class>> bigAMap = null;
-		Map<String, Set<Class>> bigEMap = null;
+	public static void main(String[] args) throws IOException {
+		Map<String, Set<Class<?>>> bigAMap = null;
+		Map<String, Set<Class<?>>> bigEMap = null;
 		File f = new File(args[0]);
-		JarUnpacker ju = new JarUnpacker(f);
 
+		InputStream inStream = new FileInputStream(f);
+		JarInputStream in = new JarInputStream(inStream);
 		JarAnalyzer ja = new JarAnalyzer();
-
-		try {
-			ja.analyzeJar(ju.unpack(), ju.getLoader());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		URLClassLoader loader = new URLClassLoader(new URL[] { f.toURI().toURL() },
+				f.getClass().getClassLoader());
+		ja.analyzeJar(in, loader);
 
 		bigAMap = ja.getBigAfferentMap();
 		bigEMap = ja.getBigEfferentMap();
 
-		Iterator it = bigEMap.entrySet().iterator();
-		while (it.hasNext()) {
-			Map.Entry<String, Set<Class>> pair = (Map.Entry) it.next();
-			double ce = pair.getValue().size();
-			Set<Class> asdf = bigAMap.get(pair.getKey());
+		System.out.printf("\n\n/////////////////STABILITIES/////////////\n");
+		for(String k : bigEMap.keySet()){
+
+			double ce = bigEMap.get(k).size();
+			Set<Class<?>> asdf = bigAMap.get(k);
 			double ca;
 			if (asdf != null)
 				ca = asdf.size();
 			else
 				ca = 0;
-			System.out.println("CLASS "+pair.getKey());
+			System.out.println("CLASS "+k);
 			System.out.println("     "+ce +"/" +ca + " + " + ce);
 			if (ce + ca != 0) {
 				
@@ -46,7 +46,6 @@ public class ConsoleRunner {
 			else
 				System.out.println("     Stability = " + 0);
 				
-			it.remove();
 		}
 	}
 }
