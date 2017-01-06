@@ -30,6 +30,7 @@ public class JarAnalyzer {
 
 	public void analyzeJar(JarInputStream in, URLClassLoader loader) throws IOException {
 		JarEntry next = in.getNextJarEntry();
+		
 		while (next != null) {
 			if (next.getName().endsWith(".class")) {
 				String name = next.getName().replaceAll("/", "\\.");
