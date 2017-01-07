@@ -21,7 +21,7 @@ public class StabilityTable extends TableView<Map.Entry<String, String>>{
 	public StabilityTable() {
 		super(items);
 		
-		TableColumn<Map.Entry<String, String>, String> column1 = new TableColumn<>("Key");
+		TableColumn<Map.Entry<String, String>, String> column1 = new TableColumn<>("Class");
 		column1.setCellValueFactory(
 				new Callback<TableColumn.CellDataFeatures<Map.Entry<String, String>, String>, ObservableValue<String>>() {
 
@@ -31,8 +31,8 @@ public class StabilityTable extends TableView<Map.Entry<String, String>>{
 						return new SimpleStringProperty(p.getValue().getKey());
 					}
 				});
-
-		TableColumn<Map.Entry<String, String>, String> column2 = new TableColumn<>("Value");
+		column1.setMinWidth(300);
+		TableColumn<Map.Entry<String, String>, String> column2 = new TableColumn<>("Stability");
 		column2.setCellValueFactory(
 				new Callback<TableColumn.CellDataFeatures<Map.Entry<String, String>, String>, ObservableValue<String>>() {
 

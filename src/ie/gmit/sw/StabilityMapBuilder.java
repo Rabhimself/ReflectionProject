@@ -8,7 +8,7 @@ public class StabilityMapBuilder {
 
 	public static Map<String,String> build(Map<String, Set<Class<?>>> map2, Map<String, Set<Class<?>>> map3) {
 
-		Map<String, String>map =new HashMap<String, String>();
+		Map<String, String>map = new HashMap<String, String>();
 
 		for(String k : map2.keySet()){
 			Set<Class<?>> efferentClasses = map2.get(k);

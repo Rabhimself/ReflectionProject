@@ -97,19 +97,23 @@ public class JarAnalyzer {
 		Set<Class<?>> dump = new HashSet<Class<?>>();
 		dependencies.forEach((c) -> {
 			String n = c.getCanonicalName();
-			int indx = n.indexOf('$');
-			if (indx != -1) {
-				n = n.substring(0, indx);
-			}
-			if (n.contains(".") && !n.startsWith("java.")) {
-				Set<Class<?>> set = bigAfferentMap.get(n);
-				if (set == null) {
-					set = new HashSet<Class<?>>();
-					bigAfferentMap.put(n, set);
+			System.out.println(c.getName());
+			System.out.println(n);
+			if (n != null) {
+				int indx = n.indexOf('$');
+				if (indx != -1) {
+					n = n.substring(0, indx);
 				}
-				set.add(cls);
-			} else {
-				dump.add(c);
+				if (n.contains(".") && !n.startsWith("java.")) {
+					Set<Class<?>> set = bigAfferentMap.get(n);
+					if (set == null) {
+						set = new HashSet<Class<?>>();
+						bigAfferentMap.put(n, set);
+					}
+					set.add(cls);
+				} else {
+					dump.add(c);
+				}
 			}
 		});
 		dependencies.removeAll(dump);
