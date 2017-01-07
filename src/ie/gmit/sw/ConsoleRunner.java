@@ -18,7 +18,7 @@ public class ConsoleRunner {
 
 		InputStream inStream = new FileInputStream(f);
 		JarInputStream in = new JarInputStream(inStream);
-		JarAnalyzer ja = new JarAnalyzer();
+		CouplingsAnalyzer ja = new CouplingsAnalyzer();
 		URLClassLoader loader = new URLClassLoader(new URL[] { f.toURI().toURL() },
 				f.getClass().getClassLoader());
 		ja.analyzeJar(in, loader);

@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import javafx.beans.property.DoubleProperty;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -26,11 +27,59 @@ public class UMLPanel extends ScrollPane {
 	private final int HEIGHT = 580;
 	ObservableList<Node> children;
 
+	// go spiral
+	// get the left node from the set, need to maintain a map of where each
+	// nodes sibs are
+	//
+	//
+	//
+
 	public UMLPanel() {
 		Pane p = new Pane();
 		children = p.getChildren();
 
 		Map<String, Set<String>> map = testLoop();
+
+		for (Entry<String, Set<String>> e : map.entrySet()) {
+
+			
+			int fullIterationsNum = e.getValue().size() / 8;
+			int lastIterationNum = e.getValue().size() % 8;
+			int ringsNum = fullIterationsNum;
+			int loop = 0;
+
+			for (int i = 0; i < ringsNum; i++) {
+
+				if (--fullIterationsNum <= 0)
+					loop = lastIterationNum;
+				else
+					loop = fullIterationsNum;
+
+				for (int j = 0; j < loop; j++) {
+					switch (j) {
+					case 0:
+					
+						break;
+					case 1:
+						break;
+					case 2:
+						break;
+					case 3:
+						break;
+					case 4:
+						break;
+					case 5:
+						break;
+					case 6:
+						break;
+					case 7:
+						break;
+
+					}
+
+				}
+			}
+		}
 
 		p.setMinWidth(WIDTH);
 		p.setMinHeight(HEIGHT);
@@ -46,7 +95,6 @@ public class UMLPanel extends ScrollPane {
 
 		for (int i = 1; i <= 15; i++) {
 			Set<String> stringset = new HashSet<String>();
-			String s = "java.lang.String " + i;
 			m.put(Integer.toString(i), new HashSet<String>());
 			double max = Math.floor(Math.random() * 5);
 			for (double j = 0; j < max; j++) {
@@ -61,20 +109,16 @@ public class UMLPanel extends ScrollPane {
 
 	}
 
-	class RelNode  extends Label{
-		private Class cls;
-	
-		public RelNode(String s, Class c) {
+	class RelNode extends Label {
+
+		public RelNode(String s, DoubleProperty x, DoubleProperty y) {
 			super(s);
-			cls = c;
 			setPadding(new Insets(5));
-			setLayoutX(WIDTH/2);
-			setLayoutY(HEIGHT/2);
-			setBorder(new Border(new BorderStroke(Color.BLACK,new BorderStrokeStyle(null, null, null,10,0,null), null,null)));
+			setLayoutX(WIDTH / 2);
+			setLayoutY(HEIGHT / 2);
+			setBorder(new Border(
+					new BorderStroke(Color.BLACK, new BorderStrokeStyle(null, null, null, 10, 0, null), null, null)));
 		}
 
-		public Class getCls() {
-			return cls;
-		}
 	}
 }
