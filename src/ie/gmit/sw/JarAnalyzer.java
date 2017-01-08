@@ -7,14 +7,15 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.Map;
+import java.util.List;
 import java.util.jar.JarInputStream;
 
 public class JarAnalyzer {
 
 	
-	public static Map<String, String> unpack(File f){
-		Map<String, String> m = null;		
+	public static List<ClassMetric> unpack(File f){
+		List<ClassMetric> metrics = null;
+
 			try {
 				InputStream inStream = new FileInputStream(f);
 				JarInputStream in = new JarInputStream(inStream);
@@ -25,14 +26,14 @@ public class JarAnalyzer {
 				CouplingsAnalyzer ca = new CouplingsAnalyzer();				
 				ca.analyzeJar(in, loader);
 
-				m = StabilityMapBuilder.build(ca.getBigEfferentMap(), ca.getBigAfferentMap());
-
+				metrics = MetricsBuilder.getMetrics(ca.getBigEfferentMap(), ca.getBigAfferentMap());
+				System.out.println(metrics.size());
 			} catch (MalformedURLException ex) {
 				ex.printStackTrace();
 			} catch (IOException ex) {
 				ex.printStackTrace();
 			}
 				
-		return m;
+		return metrics;
 	}
 }

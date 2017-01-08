@@ -1,8 +1,7 @@
 package ie.gmit.sw;
 
 import java.io.File;
-import java.util.Map;
-import java.util.Map.Entry;
+import java.util.List;
 
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
@@ -12,16 +11,16 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 
-public class StabilityPane extends BorderPane {
+public class MetricsPane extends BorderPane {
 
-	public StabilityPane() {
+	public MetricsPane() {
 		HBox layout = new HBox();
 
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.getExtensionFilters().add(new ExtensionFilter("JAR", "*.jar"));
 		fileChooser.setTitle("Open Jar File");
 
-		StabilityTable table = new StabilityTable();
+		MetricsTable table = new MetricsTable();
 
 		Button processButton;
 		processButton = new Button();
@@ -30,12 +29,13 @@ public class StabilityPane extends BorderPane {
 		processButton.setOnAction((ActionEvent e) -> {
 
 			File f = fileChooser.showOpenDialog(null);
-			Map<String, String> stabilitiesMap = null;
+			List<ClassMetric> metrics = null;
 			if (f != null)
-				 stabilitiesMap=JarAnalyzer.unpack(f);
-				for (Entry<String, String> entry : stabilitiesMap.entrySet()) {
-					table.addEntry(entry);
-				}
+				metrics = JarAnalyzer.unpack(f);
+			metrics.forEach((cm) ->{
+				table.addEntry(cm);
+			});
+			
 		});
 
 		layout.getChildren().add(processButton);
