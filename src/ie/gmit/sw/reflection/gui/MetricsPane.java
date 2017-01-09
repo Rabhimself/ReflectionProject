@@ -31,20 +31,10 @@ public class MetricsPane extends BorderPane {
 
 	public MetricsPane() {
 		
-		final DoubleProperty classes = new SimpleDoubleProperty();
-		final DoubleProperty couplings = new SimpleDoubleProperty();
-		final StringProperty couplingFactor = new SimpleStringProperty();
-		final StringProperty methodHidingFactor = new SimpleStringProperty();
-		final StringProperty classesString = new SimpleStringProperty();
-		final StringProperty ahfString = new SimpleStringProperty();
-		StringConverter<Number> converter = new NumberStringConverter();
-		Bindings.bindBidirectional(classesString, classes, converter);
-		
-		
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.getExtensionFilters().add(new ExtensionFilter("JAR", "*.jar"));
 		fileChooser.setTitle("Open Jar File");
-
+		JarMetricsPane jmp = new JarMetricsPane();
 		MetricsTable table = new MetricsTable();
 
 		Button processButton;
@@ -55,21 +45,14 @@ public class MetricsPane extends BorderPane {
 
 			File f = fileChooser.showOpenDialog(null);
 			JarMetric jarMetrics = null;
-			List<ClassMetric> metrics = null;
+			
 			if (f != null) {
-				jarMetrics = JarAnalyzer.analyze(f);
-				metrics = jarMetrics.getClassMetrics();
+				jarMetrics = new JarAnalyzer().analyze(f);
+				List<ClassMetric> metrics = jarMetrics.getClassMetrics();
 				metrics.forEach((cm) -> {
-					table.addEntry(cm);
-					couplings.set(couplings.get() + cm.getEfferent());
-					System.out.println(couplings);
+					table.addEntry(cm);					
 				});
-				classes.set(metrics.size());
-				double cf = couplings.get() /(classes.get() * (classes.get() -1));
-				double mhf = jarMetrics.getMethodHidingFactor();
-				couplingFactor.set(String.valueOf(cf));
-				methodHidingFactor.set(String.valueOf(mhf));
-				ahfString.set(Double.toString(jarMetrics.getAttributeHidingFactor()));
+				jmp.displayJar(jarMetrics);
 			}
 		});
 		
@@ -80,49 +63,12 @@ public class MetricsPane extends BorderPane {
 		top.setAlignment(Pos.CENTER_LEFT);
 		top.setPadding((new Insets(10)));
 		top.getChildren().add(processButton);
-				
-		Label jmets = new Label("Jar Metrics");
-		VBox right = new VBox();
-		right.setPadding(new Insets(10));
-		right.setAlignment(Pos.TOP_CENTER);
-		right.getChildren().add(jmets);
-		jmets.setFont(new Font(16));
-		jmets.setPadding(new Insets(0, 0, 10, 0));
-	
-		Label cls = new Label("Classes: ");
-		HBox clsBox = new HBox();
-		TextField clstf = new TextField();
-		clsBox.setAlignment(Pos.CENTER_RIGHT);
-		clstf.setMaxWidth(50);
-		clstf.setEditable(false);
-		clstf.textProperty().bind(classesString);
-		clsBox.getChildren().addAll(cls, clstf);
+
 		
-		Label cf = new Label("Coupling Factor: ");
-		HBox cfBox = new HBox();
-		TextField tf = new TextField();
-		cfBox.setAlignment(Pos.CENTER_RIGHT);	
-		cfBox.getChildren().addAll(cf, tf);
-		tf.setMaxWidth(50);
-		tf.setEditable(false);
-		tf.textProperty().bind(couplingFactor);
-		
-		Label mhfl = new Label("Method Hiding Factor: ");
-		HBox mhfBox = new HBox();
-		TextField mhftf = new TextField();
-		mhfBox.setAlignment(Pos.CENTER_RIGHT);	
-		mhfBox.getChildren().addAll(mhfl, mhftf);
-		mhftf.setMaxWidth(50);
-		mhftf.setEditable(false);
-		mhftf.textProperty().bind(methodHidingFactor);
-		
-		right.getChildren().add(clsBox);
-		right.getChildren().add(cfBox);
-		right.getChildren().add(mhfBox);
-		
+
 		this.setTop(top);
 		this.setCenter(sp);
-		this.setRight(right);
+		this.setRight(jmp);
 	}
 
 }

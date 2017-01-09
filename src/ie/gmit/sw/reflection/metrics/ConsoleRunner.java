@@ -8,13 +8,16 @@ public class ConsoleRunner {
 	public static void main(String[] args) throws IOException {
 
 		File f = new File(args[0]);
-		JarMetric jm = JarAnalyzer.analyze(f);
+		JarMetric jm = new JarAnalyzer().analyze(f);
 		
 		List<ClassMetric> classes = jm.getClassMetrics();
 		
 		System.out.printf("\n\n/////////////////STABILITIES/////////////\n");
 		for(ClassMetric cm : classes){
+
 			System.out.println(cm.getClassName());
+			System.out.println(cm.getAfferentCount());
+			System.out.println(cm.getEfferentCount());
 			System.out.println(cm.getStability());
 		}
 	}

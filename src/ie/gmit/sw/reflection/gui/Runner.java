@@ -14,7 +14,7 @@ public class Runner extends Application {
 	public void start(Stage primaryStage) throws Exception {
 
 		primaryStage.setTitle("Reflection");
-		Scene scene = new Scene(new MetricsPane(), 800, 600);
+		Scene scene = new Scene(new MetricsPane(), 1200, 800);
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}

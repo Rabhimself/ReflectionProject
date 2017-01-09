@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ie.gmit.sw.reflection.metrics.ClassMetric;
+import ie.gmit.sw.reflection.metrics.ClassMetric;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableCell;
@@ -24,15 +25,31 @@ public class MetricsTable extends TableView {
 		TableColumn classColumn = new TableColumn("Class");
 		classColumn.setCellValueFactory(new PropertyValueFactory<ClassMetric, String>("className"));
 		classColumn.setMinWidth(300);
+		TableColumn intColumn = new TableColumn("Interface");
+		intColumn.setMinWidth(50);
+		intColumn.setCellValueFactory(new PropertyValueFactory<ClassMetric, String>("isInterface"));
+		TableColumn absColumn = new TableColumn("Abstract");
+		absColumn.setMinWidth(50);
+		absColumn.setCellValueFactory(new PropertyValueFactory<ClassMetric, String>("isAbstract"));
+		TableColumn ceColumn = new TableColumn("CE");
+		ceColumn.setMinWidth(25);
+		ceColumn.setCellValueFactory(new PropertyValueFactory<ClassMetric, Double>("efferentCount"));
+		TableColumn caColumn = new TableColumn("CA");
+		caColumn.setMinWidth(25);
+		caColumn.setCellValueFactory(new PropertyValueFactory<ClassMetric, Double>("afferentCount"));
 		TableColumn stabilityColumn = new TableColumn("Stability");
-
 		TableColumn decColumn = new TableColumn<>("Value");
 		decColumn.setCellValueFactory(new PropertyValueFactory<ClassMetric, Double>("stability"));
 		TableColumn meterColumn = new TableColumn("Meter");
 		meterColumn.setCellValueFactory(new PropertyValueFactory<ClassMetric, Double>("stability"));
-		TableColumn cfColumn = new TableColumn("Dependencies");
-		cfColumn.setMinWidth(100);
-		cfColumn.setCellValueFactory(new PropertyValueFactory<ClassMetric, Double>("efferent"));
+		
+		TableColumn fieldColumn = new TableColumn("Field Count");
+		fieldColumn.setMinWidth(100);
+		fieldColumn.setCellValueFactory(new PropertyValueFactory<ClassMetric, Double>("fieldCount"));
+		
+		TableColumn mthdColumn = new TableColumn("Method Count");
+		mthdColumn.setMinWidth(100);
+		mthdColumn.setCellValueFactory(new PropertyValueFactory<ClassMetric, Double>("methodCount"));
 		
 		
 		meterColumn.setCellFactory(cb -> new TableCell<String, Double>() {
@@ -70,8 +87,13 @@ public class MetricsTable extends TableView {
 		stabilityColumn.getColumns().addAll(decColumn, meterColumn);
 				
 		cols.add(classColumn);
-		cols.add(cfColumn);
+		cols.add(intColumn);
+		cols.add(absColumn);
+		cols.add(ceColumn);
+		cols.add(caColumn);
 		cols.add(stabilityColumn);
+		cols.add(fieldColumn);
+		cols.add(mthdColumn);
 
 		this.getColumns().setAll(cols);
 	}
