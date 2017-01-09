@@ -1,8 +1,9 @@
-package ie.gmit.sw;
+package ie.gmit.sw.reflection.gui;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import ie.gmit.sw.reflection.metrics.ClassMetric;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableCell;
@@ -29,8 +30,9 @@ public class MetricsTable extends TableView {
 		decColumn.setCellValueFactory(new PropertyValueFactory<ClassMetric, Double>("stability"));
 		TableColumn meterColumn = new TableColumn("Meter");
 		meterColumn.setCellValueFactory(new PropertyValueFactory<ClassMetric, Double>("stability"));
-		TableColumn cfColumn = new TableColumn("Coupling Factor");
-		cfColumn.setCellValueFactory(new PropertyValueFactory<ClassMetric, Double>("couplingFactor"));
+		TableColumn cfColumn = new TableColumn("Dependencies");
+		cfColumn.setMinWidth(100);
+		cfColumn.setCellValueFactory(new PropertyValueFactory<ClassMetric, Double>("efferent"));
 		
 		
 		meterColumn.setCellFactory(cb -> new TableCell<String, Double>() {
@@ -66,10 +68,10 @@ public class MetricsTable extends TableView {
 
 		List<TableColumn> cols = new ArrayList<TableColumn>();
 		stabilityColumn.getColumns().addAll(decColumn, meterColumn);
-
+				
 		cols.add(classColumn);
-		cols.add(stabilityColumn);
 		cols.add(cfColumn);
+		cols.add(stabilityColumn);
 
 		this.getColumns().setAll(cols);
 	}

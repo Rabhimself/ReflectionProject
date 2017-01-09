@@ -1,9 +1,10 @@
-package ie.gmit.sw;
+package ie.gmit.sw.reflection.metrics;
 
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.net.URLClassLoader;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -13,20 +14,16 @@ import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 
-//Considered making static, however that would cause issues with checking multiple jars with the two maps being reused
-public class CouplingsAnalyzer {
-	private Map<String, Set<Class<?>>> bigAfferentMap = new HashMap<String, Set<Class<?>>>();
-	private Map<String, Set<Class<?>>> bigEfferentMap = new HashMap<String, Set<Class<?>>>();
-
-	public Map<String, Set<Class<?>>> getBigAfferentMap() {
-		return bigAfferentMap;
-	}
-
-	public Map<String, Set<Class<?>>> getBigEfferentMap() {
-		return bigEfferentMap;
-	}
-
+public class ClassesAnalyzer {
+	private Map<String, Set<Class<?>>> afferentMap;
+	private Map<String, Set<Class<?>>> efferentMap;
+	private int privateFields, fieldCount;
+	private int privateMethods, methodsCount;
+	private int interfaceCount, abstractCount;
+	
 	public void analyzeJar(JarInputStream in, URLClassLoader loader) throws IOException {
+		init();
+
 		JarEntry next = in.getNextJarEntry();
 
 		while (next != null) {
@@ -62,38 +59,58 @@ public class CouplingsAnalyzer {
 	}
 
 	private void buildCouplings(Class<?> cls) {
+
 		String clsName = cls.getName();
+
 		int index = clsName.indexOf('$');
 		if (index != -1) {
 			clsName = clsName.substring(0, index);
 		}
 
 		// Package pack = cls.getPackage();
-		// boolean iface = cls.isInterface();
+		if(cls.isInterface())
+			interfaceCount++;
+		if(Modifier.isAbstract(cls.getModifiers()))
+			abstractCount++;
+		
 
 		Set<Class<?>> dependencies = new HashSet<Class<?>>();
 
-		bigEfferentMap.put(clsName, dependencies);
+		efferentMap.put(clsName, dependencies);
 
 		Class<?>[] interfaces = cls.getInterfaces();
 		dependencies.addAll(Arrays.asList(interfaces));
 
 		Constructor<?>[] cons = cls.getConstructors();
-		;
+
 		Arrays.asList(cons).forEach((c) -> {
 			dependencies.addAll(Arrays.asList(c.getParameterTypes()));
 		});
 
 		Field[] f = cls.getDeclaredFields();
-		Arrays.asList(f).forEach((field) -> {
-			dependencies.add(field.getType());
-		});
+		for (int i = 0; i < f.length; i++) {
+			dependencies.add(f[i].getType());
+			if (Modifier.isPrivate(f[i].getModifiers()))
+				privateFields++;
+			fieldCount++;
+		}
 
 		Method[] meths = cls.getMethods();
-		Arrays.asList(meths).forEach((m) -> {
-			dependencies.add(m.getReturnType());
-			dependencies.addAll(Arrays.asList(m.getParameterTypes()));
-		});
+
+//		Arrays.asList(meths).forEach((m) -> {
+//			dependencies.add(m.getReturnType());
+//			dependencies.addAll(Arrays.asList(m.getParameterTypes()));
+//		});
+		for (int i = 0; i < meths.length; i++) {
+			dependencies.add(meths[i].getReturnType());
+			dependencies.addAll(Arrays.asList(meths[i].getParameterTypes()));
+
+			if (Modifier.isPrivate(meths[i].getModifiers())){
+				privateMethods++;
+				System.out.println(meths[i] +" is private");
+			}
+			methodsCount++;
+		}
 
 		Set<Class<?>> dump = new HashSet<Class<?>>();
 		dependencies.forEach((c) -> {
@@ -104,10 +121,10 @@ public class CouplingsAnalyzer {
 					n = n.substring(0, indx);
 				}
 				if (n.contains(".") && !n.startsWith("java.")) {
-					Set<Class<?>> set = bigAfferentMap.get(n);
+					Set<Class<?>> set = afferentMap.get(n);
 					if (set == null) {
 						set = new HashSet<Class<?>>();
-						bigAfferentMap.put(n, set);
+						afferentMap.put(n, set);
 					}
 					set.add(cls);
 				} else {
@@ -116,5 +133,39 @@ public class CouplingsAnalyzer {
 			}
 		});
 		dependencies.removeAll(dump);
+	}
+	
+	private void init() {
+		afferentMap = new HashMap<String, Set<Class<?>>>();
+		efferentMap = new HashMap<String, Set<Class<?>>>();
+		fieldCount = 0;
+		privateFields = 0;
+		privateMethods = 0;
+		methodsCount = 0;
+		interfaceCount = 0;
+	}
+	public int getInterfaceCount() {
+		return interfaceCount;
+	}
+	public int getPrivateFieldCount() {
+		return privateFields;
+	}
+	public int getFieldCount() {
+		return fieldCount;
+	}
+	public int getPrivateMethodCount() {
+		return privateMethods;
+	}
+	public int getMethodCount() {
+		return methodsCount;
+	}
+	public int getAbstractCount() {
+		return abstractCount;
+	}
+	public Map<String, Set<Class<?>>> getAfferentMap() {
+		return afferentMap;
+	}
+	public Map<String, Set<Class<?>>> getEfferentMap() {
+		return efferentMap;
 	}
 }

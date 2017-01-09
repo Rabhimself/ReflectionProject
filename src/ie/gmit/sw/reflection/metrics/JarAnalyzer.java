@@ -1,4 +1,4 @@
-package ie.gmit.sw;
+package ie.gmit.sw.reflection.metrics;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -13,8 +13,8 @@ import java.util.jar.JarInputStream;
 public class JarAnalyzer {
 
 	
-	public static List<ClassMetric> unpack(File f){
-		List<ClassMetric> metrics = null;
+	public static JarMetric analyze(File f){
+		JarMetric jarMetrics = null;
 
 			try {
 				InputStream inStream = new FileInputStream(f);
@@ -23,17 +23,18 @@ public class JarAnalyzer {
 				URLClassLoader loader = new URLClassLoader(new URL[] { f.toURI().toURL() },
 						f.getClass().getClassLoader());
 				
-				CouplingsAnalyzer ca = new CouplingsAnalyzer();				
+				ClassesAnalyzer ca = new ClassesAnalyzer();				
 				ca.analyzeJar(in, loader);
 
-				metrics = MetricsBuilder.getMetrics(ca.getBigEfferentMap(), ca.getBigAfferentMap());
-				System.out.println(metrics.size());
+				List<ClassMetric> metrics = MetricsBuilder.getMetrics(ca.getEfferentMap(), ca.getAfferentMap());
+				
+				jarMetrics = new JarMetric(metrics, ca.getPrivateFieldCount()/ca.getFieldCount(), ca.getPrivateMethodCount()/ca.getMethodCount());
 			} catch (MalformedURLException ex) {
 				ex.printStackTrace();
 			} catch (IOException ex) {
 				ex.printStackTrace();
 			}
 				
-		return metrics;
+		return jarMetrics;
 	}
 }
