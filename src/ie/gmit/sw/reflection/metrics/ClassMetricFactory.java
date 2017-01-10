@@ -2,6 +2,7 @@ package ie.gmit.sw.reflection.metrics;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
@@ -15,7 +16,7 @@ public class ClassMetricFactory {
 			return null;
 
 		String clsName = trimName(cls.getName());
-
+		Class<?> superClass = cls.getSuperclass();
 		ClassMetric cm = new ClassMetric(clsName);
 		Set<Class<?>> dependencies = new HashSet<Class<?>>();
 
@@ -32,27 +33,30 @@ public class ClassMetricFactory {
 			dependencies.addAll(Arrays.asList(c.getParameterTypes()));
 		});
 
+		
+		
 		Field[] f = cls.getDeclaredFields();
+		
 		int privateFields = 0;
 		int fieldCount = 0;
-		int inheritedFields = 0;
+		
 		for (int i = 0; i < f.length; i++) {
 			dependencies.add(f[i].getType());
 			if (Modifier.isPrivate(f[i].getModifiers()))
 				privateFields++;
-			if(isInherited(f[i].getDeclaringClass(), cls))
-				inheritedFields++;
 			fieldCount++;
 		}
 		cm.setFieldCount(fieldCount);
 		cm.setPrivateFieldCount(privateFields);
-		cm.setInheritedFieldCount(inheritedFields);
 		
+
 		Method[] meths = cls.getDeclaredMethods();
+		
 		
 		int privateMethods = 0;
 		int methodsCount = 0;
-		int inheritedMethods = 0;
+
+		
 		for (int i = 0; i < meths.length; i++) {
 			dependencies.add(meths[i].getReturnType());
 			dependencies.addAll(Arrays.asList(meths[i].getParameterTypes()));
@@ -60,18 +64,21 @@ public class ClassMetricFactory {
 
 				privateMethods++;
 			}
-			Class<?> declaring = meths[i].getDeclaringClass();
-			if(isInherited(declaring, cls)){
-				inheritedMethods++;			
-			}
-
 			methodsCount++;
 
 		}
 		cm.setMethodCount(methodsCount);
 		cm.setPrivateMethodCount(privateMethods);
-		cm.setInheritedMethodCount(inheritedMethods);
 		
+		int inheritedMethods = 0;
+		int inheritedFields = 0;
+		if(isValidClass(superClass)){
+			inheritedMethods = getInherited(superClass, Method.class);
+			inheritedFields = getInherited(superClass, Field.class);
+		}
+		cm.setInheritedMethodCount(inheritedMethods);
+		cm.setInheritedFieldCount(inheritedFields);
+
 		dependencies.forEach((c) -> {
 			if (isValidClass(c)) {
 				cm.addEfferentDependency(trimName(c.getName()));
@@ -98,13 +105,18 @@ public class ClassMetricFactory {
 			return name;
 	}
 
-	private boolean isInherited(Class<?> declaring, Class<?> cls) {
-		if (isValidClass(declaring)) {
-			if (!declaring.equals(cls)) {
-				if (declaring.isAssignableFrom(cls))
-					return true;
-			}
-		}
-		return false;
+	private int getInherited(Class<?> cls, Class<? extends Member> m) {
+		int i = 0;
+		if (isValidClass(cls.getSuperclass()))
+			i += getInherited(cls.getSuperclass(), m);
+		
+		if (m.equals(Method.class))
+			i += cls.getDeclaredMethods().length;
+		if (m.equals(Field.class))
+			i += cls.getDeclaredFields().length;
+		if (m.equals(Constructor.class))
+			i += cls.getDeclaredConstructors().length;
+
+		return i;
 	}
 }

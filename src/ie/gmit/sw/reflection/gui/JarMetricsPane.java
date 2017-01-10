@@ -56,7 +56,7 @@ public class JarMetricsPane extends Pane {
 		intBox.setAlignment(Pos.CENTER_RIGHT);
 		inttf.setMaxWidth(50);
 		inttf.setEditable(false);
-		inttf.textProperty().bind(classes);
+		inttf.textProperty().bind(interfaceCountString);
 		intBox.getChildren().addAll(interfaces, inttf);
 
 		Label cf = new Label("Coupling Factor: ");

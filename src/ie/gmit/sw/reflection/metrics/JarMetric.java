@@ -17,7 +17,7 @@ public class JarMetric {
 		this.methodHidingFactor = methodHidingFactor;
 		this.interfaceCount = interfaceCount;
 		this.abstractCount = abstractCount;
-		this.attributeHidingFactor = attributeInheritanceFactor;
+		this.attributeInheritanceFactor = attributeInheritanceFactor;
 		this.methodInheritanceFactor = methodInheritanceFactor;
 	}
 	
