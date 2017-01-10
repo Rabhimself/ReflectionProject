@@ -47,10 +47,17 @@ public class MetricsTable extends TableView {
 		fieldColumn.setMinWidth(100);
 		fieldColumn.setCellValueFactory(new PropertyValueFactory<ClassMetric, Double>("fieldCount"));
 		
+		TableColumn privfieldColumn = new TableColumn("Private Field Count");
+		privfieldColumn.setMinWidth(100);
+		privfieldColumn.setCellValueFactory(new PropertyValueFactory<ClassMetric, Double>("privateFieldCount"));
+		
 		TableColumn mthdColumn = new TableColumn("Method Count");
 		mthdColumn.setMinWidth(100);
 		mthdColumn.setCellValueFactory(new PropertyValueFactory<ClassMetric, Double>("methodCount"));
 		
+		TableColumn privMthdColumn = new TableColumn("Private Method Count");
+		privMthdColumn.setMinWidth(100);
+		privMthdColumn.setCellValueFactory(new PropertyValueFactory<ClassMetric, Double>("privateMethodCount"));
 		
 		meterColumn.setCellFactory(cb -> new TableCell<String, Double>() {
 			@Override
@@ -93,8 +100,9 @@ public class MetricsTable extends TableView {
 		cols.add(caColumn);
 		cols.add(stabilityColumn);
 		cols.add(fieldColumn);
+		cols.add(privfieldColumn);
 		cols.add(mthdColumn);
-
+		cols.add(privMthdColumn);
 		this.getColumns().setAll(cols);
 	}
 

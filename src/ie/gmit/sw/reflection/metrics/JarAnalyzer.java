@@ -14,12 +14,12 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 
 public class JarAnalyzer {
-	Map<String, ClassMetric> classMetrics;
+	private Map<String, ClassMetric> classMetrics;
 	private double privateFields, fieldCount;
 	private double privateMethods, methodsCount;
 	private double inheritedMethods, inheritedFields;
 	private int interfaceCount, abstractCount;
-	ClassMetricFactory ca = new ClassMetricFactory();
+	private ClassMetricFactory ca = new ClassMetricFactory();
 
 	public JarMetric analyze(File f) {
 		JarMetric jarMetrics = null;
@@ -33,9 +33,11 @@ public class JarAnalyzer {
 			analyzeJar(in, loader);
 			double mhf = methodsCount != 0 ? privateMethods / methodsCount : 0;
 			double ahf = fieldCount != 0 ? privateFields / fieldCount : 0;
-			double aif = inheritedFields + fieldCount !=0 ? inheritedFields / (fieldCount + inheritedFields) : 0; 
-			double mif = inheritedMethods+ methodsCount !=0 ? inheritedMethods/ (methodsCount + inheritedMethods) : 0; 
-			jarMetrics = new JarMetric(new ArrayList<ClassMetric>(classMetrics.values()), ahf,aif, mhf, mif, interfaceCount, abstractCount);
+			double aif = inheritedFields + fieldCount != 0 ? inheritedFields / (fieldCount + inheritedFields) : 0;
+			double mif = inheritedMethods + methodsCount != 0 ? inheritedMethods / (methodsCount + inheritedMethods)
+					: 0;
+			jarMetrics = new JarMetric(new ArrayList<ClassMetric>(classMetrics.values()), ahf, aif, mhf, mif,
+					interfaceCount, abstractCount);
 		} catch (MalformedURLException ex) {
 			ex.printStackTrace();
 		} catch (IOException ex) {
@@ -60,13 +62,17 @@ public class JarAnalyzer {
 				try {
 					Class<?> cls = Class.forName(name, true, loader);
 					ClassMetric cm = ca.getNewClassMetric(cls);
-					if (cm != null)
-						classMetrics.put(cm.getClassName(), cm);
+					if (cm != null) {
+						if (classMetrics.containsKey(cm.getClassName()))
+							classMetrics.get(cm.getClassName()).merge(cm);
+						else
+							classMetrics.put(cm.getClassName(), cm);
+					}
 				}
 				// These are thrown when trying to load some classes that aren't
 				// necessarily needed by the library, but can be used.
 				// Loggers and (sometimes) test suites it seems, since they CAN
-				// be used, but aren't by default. 
+				// be used, but aren't by default.
 				catch (ClassNotFoundException e1) {
 					// TODO Auto-generated catch block
 					System.out.println("Class loader tried loading an external class: " + name);
@@ -85,7 +91,7 @@ public class JarAnalyzer {
 
 	private void getJarMetrics() {
 
-		for(String s : classMetrics.keySet()){
+		for (String s : classMetrics.keySet()) {
 			ClassMetric cm = classMetrics.get(s);
 			determineAfferentDependencies(cm);
 			fieldCount += cm.getFieldCount();
@@ -95,14 +101,14 @@ public class JarAnalyzer {
 			interfaceCount += cm.getIsInterface() == true ? 1 : 0;
 			abstractCount += cm.getIsAbstract() == true ? 1 : 0;
 			inheritedMethods += cm.getInheritedMethodCount();
-			inheritedFields+= cm.getInheritedFieldCount();
+			inheritedFields += cm.getInheritedFieldCount();
 		}
-
 	}
 
 	private void determineAfferentDependencies(ClassMetric cm) {
 		cm.getEfferentDependencies().forEach(dep -> {
-			//just in case a class is dependent on a nonjdk class not in the current jar
+			// just in case a class is dependent on a nonjdk class not in the
+			// current jar
 			if (classMetrics.get(dep) != null)
 				classMetrics.get(dep).addAfferentDependecy(cm.getClassName());
 		});

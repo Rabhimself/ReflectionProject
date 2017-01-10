@@ -3,8 +3,12 @@ package ie.gmit.sw.reflection.metrics;
 import java.util.HashSet;
 import java.util.Set;
 
-//make interface with only the metric methods, ignore all get/set
-public class ClassMetric  {
+//Considered making this an interface, until I started adding more metrics
+//Which meant any interface i designed would still be fairly bloated
+//Instead I decided to make the a psuedo factory class that would take any class as a parameter
+//and return all the metrics for it, the only problem is the afferent dependencies set does not get
+//instantiated in that factory, the jar analyzer has to do that once it has all the class metrics built(specifically the list of efferent couplings)
+public class ClassMetric {
 	private double efferentCount;
 	private double afferentCount;
 	private String className;
@@ -19,6 +23,23 @@ public class ClassMetric  {
 	private Set<String> efferentDependencies;
 	private Set<String> afferentDependencies;
 
+	//Since trimming the names after '$' with anonymous classes
+	//when the jar analyzer comes across a duplicate classmetric it combines their metrics together
+	public void merge(ClassMetric cm) {
+		efferentCount += cm.getEfferentCount();
+		afferentCount += cm.getAfferentCount();
+		isInterface = cm.isInterface || this.isInterface ? true : false;
+		isAbstract = cm.isAbstract || this.isAbstract ? true : false;
+		methodCount += cm.getMethodCount();
+		inheritedMethodCount += cm.getInheritedMethodCount();
+		privateMethodCount += cm.getPrivateMethodCount();
+		fieldCount += cm.getFieldCount();
+		privateFieldCount += cm.getPrivateFieldCount();
+		inheritedFieldCount += cm.getInheritedFieldCount();
+		efferentDependencies.addAll(cm.getEfferentDependencies());
+		afferentDependencies.addAll(cm.getAfferentDependencies());
+	}
+
 	public ClassMetric(String name) {
 		this.className = name;
 		efferentCount = afferentCount = methodCount = privateFieldCount = fieldCount = privateFieldCount = 0;
@@ -27,7 +48,6 @@ public class ClassMetric  {
 		afferentDependencies = new HashSet<String>();
 	}
 
-
 	public double getEfferentCount() {
 		return efferentCount;
 	}
@@ -35,7 +55,6 @@ public class ClassMetric  {
 	public void setEfferentCount(double efferent) {
 		this.efferentCount = efferent;
 	}
-
 
 	public double getAfferentCount() {
 		return afferentCount;
@@ -53,7 +72,6 @@ public class ClassMetric  {
 		this.isInterface = isInterface;
 	}
 
-	
 	public boolean getIsAbstract() {
 		return isAbstract;
 	}
@@ -114,7 +132,6 @@ public class ClassMetric  {
 		this.inheritedMethodCount = inheritedMethodCount;
 	}
 
-
 	public int getInheritedFieldCount() {
 		return inheritedFieldCount;
 	}
@@ -122,7 +139,6 @@ public class ClassMetric  {
 	public void setInheritedFieldCount(int inheritedFieldCount) {
 		this.inheritedFieldCount = inheritedFieldCount;
 	}
-
 
 	public double getStability() {
 		return efferentCount + afferentCount != 0 ? (efferentCount / (efferentCount + afferentCount)) : 0;
@@ -152,4 +168,5 @@ public class ClassMetric  {
 			return name.substring(0, i);
 		return name;
 	}
+
 }

@@ -1,12 +1,7 @@
 package ie.gmit.sw.reflection.gui;
 
-import java.lang.invoke.MethodHandleInfo;
-
 import ie.gmit.sw.reflection.metrics.ClassMetric;
 import ie.gmit.sw.reflection.metrics.JarMetric;
-import javafx.beans.binding.Bindings;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Insets;
@@ -17,8 +12,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
-import javafx.util.StringConverter;
-import javafx.util.converter.NumberStringConverter;
 
 public class JarMetricsPane extends Pane {
 

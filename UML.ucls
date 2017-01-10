@@ -3,47 +3,47 @@
   realizations="true" associations="true" dependencies="true" nesting-relationships="true" router="FAN">  
   <class id="1" language="java" name="ie.gmit.sw.reflection.metrics.JarAnalyzer" project="Reflection" 
     file="/Reflection/src/ie/gmit/sw/reflection/metrics/JarAnalyzer.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1157" y="-75"/>    
+    <position height="-1" width="-1" x="662" y="61"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
   <class id="2" language="java" name="ie.gmit.sw.reflection.metrics.ClassMetric" project="Reflection" 
     file="/Reflection/src/ie/gmit/sw/reflection/metrics/ClassMetric.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1154" y="561"/>    
+    <position height="-1" width="-1" x="664" y="604"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
   <class id="3" language="java" name="ie.gmit.sw.reflection.metrics.JarMetric" project="Reflection" 
     file="/Reflection/src/ie/gmit/sw/reflection/metrics/JarMetric.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="662" y="335"/>    
+    <position height="-1" width="-1" x="1202" y="581"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
   <class id="4" language="java" name="ie.gmit.sw.reflection.metrics.ClassMetricFactory" project="Reflection" 
     file="/Reflection/src/ie/gmit/sw/reflection/metrics/ClassMetricFactory.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1439" y="541"/>    
+    <position height="-1" width="-1" x="330" y="276"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
   <class id="5" language="java" name="ie.gmit.sw.reflection.gui.MetricsTable" project="Reflection" 
     file="/Reflection/src/ie/gmit/sw/reflection/gui/MetricsTable.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="206" y="569"/>    
+    <position height="-1" width="-1" x="168" y="617"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
   <class id="6" language="java" name="ie.gmit.sw.reflection.gui.JarMetricsPane" project="Reflection" 
@@ -51,21 +51,20 @@
     <position height="-1" width="-1" x="677" y="968"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
   <class id="7" language="java" name="ie.gmit.sw.reflection.gui.MetricsPane" project="Reflection" 
     file="/Reflection/src/ie/gmit/sw/reflection/gui/MetricsPane.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="105" y="888"/>    
+    <position height="-1" width="-1" x="140" y="950"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
   <association id="8">    
-    <bendpoint x="1423" y="-76"/>    
     <end type="SOURCE" refId="1" navigable="false">      
       <attribute id="9" name="ca"/>      
       <multiplicity id="10" minimum="0" maximum="1"/>    
@@ -98,7 +97,7 @@
     <end type="TARGET" refId="6"/>  
   </dependency>  
   <association id="18">    
-    <bendpoint x="1220" y="92"/>    
+    <bendpoint x="678" y="295"/>    
     <end type="SOURCE" refId="1" navigable="false">      
       <attribute id="19" name="classMetrics"/>      
       <multiplicity id="20" minimum="0" maximum="2147483647"/>    
@@ -127,13 +126,13 @@
     <display labels="true" multiplicity="true"/>  
   </association>  
   <dependency id="28">    
-    <bendpoint x="720" y="-75"/>    
+    <bendpoint x="1182" y="66"/>    
     <end type="SOURCE" refId="1"/>    
     <end type="TARGET" refId="3"/>  
   </dependency>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" 
     sort-features="false" accessors="true" visibility="true">    
-    <attributes public="true" package="true" protected="true" private="true" static="true"/>    
+    <attributes public="false" package="false" protected="false" private="false" static="true"/>    
     <operations public="true" package="true" protected="true" private="true" static="true"/>  
   </classifier-display>  
   <association-display labels="true" multiplicity="true"/>
